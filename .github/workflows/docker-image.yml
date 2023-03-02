@@ -9,18 +9,17 @@ on:
     tags:
       - V1.*
 
-# build and publish docker image to docker hub tag with tag name and update latest tag
-
+# build and publish docker image to docker hub tag with only tag name and update latest tag
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ github.ref }}
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY}}:${{ github.ref }}
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin  
       - name: Push the Docker image to Docker Hub
-        run: docker push ${{ github.repository }}:${{ github.ref }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ github.ref }}
       - name: Push the Docker image to Docker Hub
-        run: docker push ${{ github.repository }}:latest  
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:latest  
